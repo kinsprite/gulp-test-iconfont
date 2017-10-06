@@ -4,6 +4,7 @@ var iconfontCss = require('gulp-iconfont-css');
 var clean = require("gulp-clean");
 var taskListing = require("gulp-task-listing");
 var template = require("gulp-template");
+var del = require('del');
 
 var fs = require("fs");
 var codepoints = require('./codepoints');
@@ -42,7 +43,7 @@ gulp.task('example', function(){
 });
 
 gulp.task('clean', function(){
-   gulp.src("./dist", {read: false}).pipe(clean());
+  return del(['./dist']);
 });
 
 gulp.task('help', taskListing);
