@@ -14,7 +14,7 @@
           text-align: center;
           list-style: none;
         }
-        .icon_lists .icon{
+        .icon_lists .<%= cssClass %>{
           font-size: 42px;
           margin: 10px 0;
           color:#333;
@@ -23,7 +23,7 @@
           transition: font-size 0.25s ease-out 0s;
 
         }
-        .icon_lists .icon:hover{
+        .icon_lists .<%= cssClass %>:hover{
           font-size: 100px;
         }
         .name {
@@ -43,7 +43,7 @@
     <h2>Icon Font</h2>
     <ul class="icon_lists clear">
     <% _.each(icons, function(icon) { %>
-       <li class="icon icon-<%= icon %>">
+       <li class="<%= cssClass %> <%= cssClass %>-<%= icon %>">
           <div class="name"><%= icon%></div>
        </li>
     <% }); %>
@@ -51,8 +51,8 @@
    <div>
      <h2>Use Icon Font</h2>
      <pre>
-      &lt;span class=&quot;icon icon-add&quot;&gt;&lt;/span&gt;
-     </pre> 
-   </div>    
+      &lt;span class=&quot;<%= cssClass %> <%= cssClass %>-add&quot;&gt;&lt;/span&gt;
+     </pre>
+   </div>
 </body>
 </html>

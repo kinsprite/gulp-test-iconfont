@@ -1,8 +1,6 @@
 var gulp = require('gulp');
 var iconfont = require('gulp-iconfont');
 var iconfontCss = require('gulp-iconfont-css');
-var clean = require("gulp-clean");
-var taskListing = require("gulp-task-listing");
 var template = require("gulp-template");
 var del = require('del');
 
@@ -11,16 +9,19 @@ var codepoints = require('./codepoints');
 
 var icons = fs.readdirSync("src/icons");
 
-
-icons = icons.map(function(icon){
-   return icon.replace(/\.\w+$/, '');
+icons = icons.map(function(icon) {
+  return icon.replace(/\.\w+$/, '');
 });
 
-var fontName = 'iconfont';
+// 定义字体名称、CSS Class名称
+var fontName = 'netstar-icons';
+// 定义CSS Class名称
+var className = 'nsicon';
 
 gulp.task('iconfont', function(){
-  gulp.src('src/icons/*.svg')
+  return gulp.src('src/icons/*.svg')
     .pipe(iconfontCss({
+      cssClass: className,
       fontName: fontName,
       fixedCodepoints: codepoints,
       path: 'src/templates/_icons.css',
@@ -31,21 +32,20 @@ gulp.task('iconfont', function(){
       fontName: fontName,
       formats: ['svg', 'ttf', 'eot', 'woff', 'woff2'],
       normalize: true,
+      fontHeight: 1001,
       // prependUnicode: false
      }))
     .pipe(gulp.dest('dist/fonts/'));
 });
 
 gulp.task('example', function(){
-  gulp.src('src/example/index.html')
-     .pipe(template({icons: icons}))
-     .pipe(gulp.dest("./dist/example"));
+  return gulp.src('src/example/index.html')
+    .pipe(template({icons: icons, cssClass: className}))
+    .pipe(gulp.dest("./dist/example"));
 });
 
 gulp.task('clean', function(){
   return del(['./dist']);
 });
 
-gulp.task('help', taskListing);
-
-gulp.task('default', ['clean', 'iconfont', 'example']);
+gulp.task('default', gulp.series('clean', 'iconfont', 'example'));
