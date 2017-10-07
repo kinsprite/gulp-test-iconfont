@@ -9,7 +9,7 @@ var codepoints = require('./codepoints');
 
 var icons = fs.readdirSync("src/icons");
 
-icons = icons.map(function(icon) {
+icons = icons.map(function (icon) {
   return icon.replace(/\.\w+$/, '');
 });
 
@@ -18,7 +18,24 @@ var fontName = 'netstar-icons';
 // 定义CSS Class名称
 var className = 'nsicon';
 
-gulp.task('iconfont', function(){
+function checkUniqueCodePoints(codepoints) {
+  var cp2fileName = {};
+  var cp;
+
+  for (var fileName in codepoints) {
+    cp = codepoints[fileName];
+
+    if (cp2fileName[cp] !== undefined) {
+      throw new Error('Duplicate codepoint "0x' + cp.toString(16) + '".');
+    }
+
+    cp2fileName[cp] = fileName;
+  }
+}
+
+gulp.task('iconfont', function () {
+  checkUniqueCodePoints(codepoints);
+
   return gulp.src('src/icons/*.svg')
     .pipe(iconfontCss({
       cssClass: className,
@@ -34,17 +51,20 @@ gulp.task('iconfont', function(){
       normalize: true,
       fontHeight: 1001,
       // prependUnicode: false
-     }))
+    }))
     .pipe(gulp.dest('dist/fonts/'));
 });
 
-gulp.task('example', function(){
+gulp.task('example', function () {
   return gulp.src('src/example/index.html')
-    .pipe(template({icons: icons, cssClass: className}))
+    .pipe(template({
+      icons: icons,
+      cssClass: className
+    }))
     .pipe(gulp.dest("./dist/example"));
 });
 
-gulp.task('clean', function(){
+gulp.task('clean', function () {
   return del(['./dist']);
 });
 
