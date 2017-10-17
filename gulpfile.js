@@ -33,8 +33,17 @@ function checkUniqueCodePoints(codepoints) {
   }
 }
 
+function checkAllFileCodePoints(codepoints) {
+  icons.forEach(function (icon) {
+    if (!codepoints[icon]) {
+      throw new Error('No codepoint for "' + icon + '".');
+    }
+  });
+}
+
 gulp.task('iconfont', function () {
   checkUniqueCodePoints(codepoints);
+  checkAllFileCodePoints(codepoints);
 
   return gulp.src('src/icons/*.svg')
     .pipe(iconfontCss({
