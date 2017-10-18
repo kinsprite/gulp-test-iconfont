@@ -5,13 +5,15 @@ const consolidate = require('gulp-consolidate');
 const bs = require('browser-sync').create();
 const del = require('del');
 
+const pkg = require('./package');
+const banner = `${pkg.name} | ${pkg.version} | ${(new Date()).toISOString()} | ${pkg.description}`;
+
 /**
  * Font settings
  */
 const fontName = 'netstar-icons'; // set name of your symbol font
 const className = 'nsicon'; // set class name in your CSS
 const template = 'fontawesome-style'; // or 'foundation-style'
-const skethcFileName = 'symbol-font-14px.sketch'; // or 'symbol-font-16px.sketch'
 
 /**
  * Recommended to get consistent builds when watching files
@@ -24,14 +26,16 @@ gulp.task('iconfont', () =>
     .pipe(iconfont({
       fontName,
       formats: ['ttf', 'eot', 'woff', 'woff2', 'svg'],
-      normalize: true,
-      fontHeight: 1001,
       prependUnicode: true,
+      // combine the fontHeight and the normalize option to get them in a correct size
+      normalize: true,
+      fontHeight: 1024,
       timestamp,
       log: () => {} // suppress unnecessary logging
     }))
     .on('glyphs', (glyphs) => {
       const options = {
+        banner,
         className,
         fontName,
         fontPath: '../fonts/', // set path to font (from your CSS file if relative)
@@ -71,11 +75,12 @@ gulp.task('clean', function () {
 });
 
 gulp.task('default', gulp.series('clean', 'iconfont'));
+gulp.task('serve', gulp.series('watch'));
 
 /**
  * This is needed for mapping glyphs and codepoints.
  */
-function mapGlyphs (glyph) {
+function mapGlyphs(glyph) {
   if (glyph.name.indexOf(' ') !== -1) {
     throw new Error(`Invalid glyph file name: "${glyph.name}", blank space isn't allowed!`);
   }
@@ -86,7 +91,7 @@ function mapGlyphs (glyph) {
 /**
  * This keeps browser from caching fonts for your testing environment
  */
-function cacheControl (req, res, next) {
+function cacheControl(req, res, next) {
   res.setHeader('Cache-control', 'no-store');
   next();
 }

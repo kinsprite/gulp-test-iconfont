@@ -1,7 +1,7 @@
 {
   "name": "gulp-test-iconfont",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Icon Font",
   "main": "index.js",
   "scripts": {
     "start": "gulp watch",
